@@ -7,12 +7,11 @@ import feedparser
 import requests
 
 # --- WEBHOOKS ---
-# If you want them in separate channels, put the ScriptBlox webhook URL here:
-V3RM_WEBHOOK = "https://discord.com/api/webhooks/1562247773611491423/GKdbfMGI86oW1D0tiZKoOwuN38ENzZY3u5Wha2PQFAmU_8VAiUPvaSVuZvGgrcZR5AKZ"
-SCRIPTBLOX_WEBHOOK = "https://discord.com/api/webhooks/1562247773611491423/GKdbfMGI86oW1D0tiZKoOwuN38ENzZY3u5Wha2PQFAmU_8VAiUPvaSVuZvGgrcZR5AKZ"
+V3RM_WEBHOOK = "https://discord.com/api/webhooks/1562394916653367417/ItV37v1r4LwP1twjlGLM1_hICp9Ju1-eCNNqgVcW7ytl27TqVIyEmTNSZ5mrhtdWlmCl"
+SCRIPTBLOX_WEBHOOK = "https://discord.com/api/webhooks/1562395084971057152/aFM9z7Z352KMHPNMfXaC4t-h-h_iuK-6eV08zW5Ttw-vKHqTAxnkqwCwfkL0pO26-AAv"
 
-# Jina.ai proxy for V3rm (bypasses Cloudflare block on GitHub IPs)
-V3RM_RSS = "https://r.jina.ai/https://v3rm.net/forums/roblox.19/index.rss"
+# AllOrigins proxy to bypass Cloudflare block on GitHub IPs
+V3RM_RSS = "https://api.allorigins.win/raw?url=https%3A%2F%2Fv3rm.net%2Fforums%2Froblox.19%2Findex.rss"
 SCRIPTBLOX_API = "https://scriptblox.com/api/script/fetch"
 
 HEADERS = {
@@ -68,6 +67,8 @@ def check_v3rm():
                 continue
             if baseline:
                 seen.add(link); continue
+            
+            # SENDS TO V3RM WEBHOOK
             send_discord(V3RM_WEBHOOK, title, f"**Author:** {e.get('author','?')}\n**Posted:** {e.get('published','')}",
                          link, 0xE74C3C, "V3rm · roblox.19")
             seen.add(link)
@@ -119,6 +120,8 @@ def check_scriptblox():
                     game = (s.get("game") or {}).get("name", "Unknown")
                     slug = s.get("slug", "")
                     url = f"https://scriptblox.com/script/{slug}-{sid}" if slug else f"https://scriptblox.com/script/{sid}"
+                    
+                    # SENDS TO SCRIPTBLOX WEBHOOK
                     send_discord(SCRIPTBLOX_WEBHOOK, title, f"**Game:** {game}\n**Views:** {s.get('views',0)}\n**Key:** `{s.get('key',False)}`",
                                  url, 0x3498DB, "ScriptBlox")
                 seen.add(sid)
